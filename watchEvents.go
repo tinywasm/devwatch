@@ -99,16 +99,20 @@ func (h *DevWatch) watchEvents() {
 				continue // Skip duplicate event
 			}
 
-			// Record event with content hash for next comparison
-			lastEventInfo[event.Name] = fileEventKey{
-				lastTime: now,
-				lastHash: h.calculateFileHash(event.Name),
-			}
-
 			// Handle file events (both delete and non-delete)
 			// NOTE: This call blocks during compilation! Events arriving during
 			// compilation will queue up in the watcher.Events channel.
 			h.handleFileEvent(fileName, event.Name, eventType, isDeleteEvent)
+
+			// Record event with content hash AFTER processing
+			// This ensures the hash reflects the file state after compilation/processing
+			// FIX: Previously this was done BEFORE handleFileEvent, causing rapid edits
+			// to be incorrectly detected as duplicates because the hash was captured
+			// before the file was actually modified by the compilation process.
+			lastEventInfo[event.Name] = fileEventKey{
+				lastTime: now,
+				lastHash: h.calculateFileHash(event.Name),
+			}
 
 		case err, ok := <-h.watcher.Errors:
 			if !ok {
