@@ -29,7 +29,7 @@ func TestWasmReloadRaceCondition_DependencyDetection(t *testing.T) {
 
 go 1.25.2
 
-require github.com/cdvelop/tinystring v0.8.3
+require github.com/tinywasm/fmt v0.8.3
 `
 	if err := os.WriteFile(tempDir+"/go.mod", []byte(goModContent), 0644); err != nil {
 		t.Fatal(err)
@@ -39,7 +39,7 @@ require github.com/cdvelop/tinystring v0.8.3
 	greetFile := tempDir + "/pkg/greet/greet.go"
 	greetContent := `package greet
 
-import . "github.com/cdvelop/tinystring"
+import . "github.com/tinywasm/fmt"
 
 func Greet(target string) string {
 	return Fmt("Hello, %s 👋", target, "from Go!!")
@@ -152,7 +152,7 @@ func main() {
 		t.Errorf("❌ BUG CONFIRMED: Only %d compilations for 2 edits!", compilations)
 		t.Errorf("   greet.go edit did NOT trigger compilation!")
 		t.Errorf("   This means browser reloaded with STALE WASM code!")
-		t.Errorf("   godepfind.ThisFileIsMine() is NOT detecting the dependency!")
+		t.Errorf("   depfind.ThisFileIsMine() is NOT detecting the dependency!")
 	} else {
 		t.Logf("✅ CORRECT: Both main.go and greet.go edits triggered compilation")
 	}

@@ -304,8 +304,8 @@ func (h *BackendHandler) NewFileEvent(fileName, ext, path, event string) error {
 
 ```go
 import (
-    "github.com/cdvelop/devwatch"
-    "github.com/cdvelop/godepfind"
+    "github.com/tinywasm/devwatch"
+    "github.com/tinywasm/depfind"
 )
 
 // Frontend assets handler

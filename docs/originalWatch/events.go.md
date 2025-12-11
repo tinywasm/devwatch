@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	. "github.com/cdvelop/output"
+	. "github.com/tinywasm/output"
 	"github.com/fsnotify/fsnotify"
 )
 

@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cdvelop/godepfind"
+	"github.com/tinywasm/depfind"
 	"github.com/fsnotify/fsnotify"
 )
 
@@ -38,7 +38,7 @@ type WatchConfig struct {
 type DevWatch struct {
 	*WatchConfig
 	watcher         *fsnotify.Watcher
-	depFinder       *godepfind.GoDepFind // Dependency finder for Go projects
+	depFinder       *depfind.GoDepFind // Dependency finder for Go projects
 	no_add_to_watch map[string]bool
 	noAddMu         sync.RWMutex
 	// reload timer to debounce browser reloads across multiple events
@@ -50,7 +50,7 @@ type DevWatch struct {
 func New(c *WatchConfig) *DevWatch {
 	dw := &DevWatch{
 		WatchConfig: c,
-		depFinder:   godepfind.New(c.AppRootDir),
+		depFinder:   depfind.New(c.AppRootDir),
 	}
 	return dw
 }
