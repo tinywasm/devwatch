@@ -124,9 +124,19 @@ func main() {
 		BrowserReload: func() error {
 			count := atomic.AddInt64(&reloadCount, 1)
 			now := time.Now()
-			reloadTimes = append(reloadTimes, now)
-			if len(compilationTimes) > 0 {
-				t.Logf("[t=%.3fs] Browser reload %d", time.Since(compilationTimes[0]).Seconds(), count)
+
+			// Protect access to shared slices
+			timesMutex.Lock()
+			reloadTimes = append(reloadTimes, now) // Protected just in case, though usually single-threaded
+			hasCompilations := len(compilationTimes) > 0
+			var firstCompTime time.Time
+			if hasCompilations {
+				firstCompTime = compilationTimes[0]
+			}
+			timesMutex.Unlock()
+
+			if hasCompilations {
+				t.Logf("[t=%.3fs] Browser reload %d", time.Since(firstCompTime).Seconds(), count)
 			}
 			reloadCalled <- struct{}{}
 			return nil
