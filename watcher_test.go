@@ -2,8 +2,6 @@ package devwatch
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestContain(t *testing.T) {
@@ -130,7 +128,9 @@ func TestContain(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			handler := tt.setup()
-			assert.Equal(t, tt.expected, handler.Contain(tt.path))
+			if got := handler.Contain(tt.path); got != tt.expected {
+				t.Errorf("Contain(%q) = %v; want %v", tt.path, got, tt.expected)
+			}
 		})
 	}
 }

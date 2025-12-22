@@ -15,11 +15,11 @@ func TestWasmReloadRaceCondition_DependencyDetection(t *testing.T) {
 	tempDir := t.TempDir()
 
 	// Create project structure matching the example
-	err := os.MkdirAll(tempDir+"/cmd/webclient", 0755)
+	err := os.MkdirAll(tempDir+"/src/cmd/webclient", 0755)
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = os.MkdirAll(tempDir+"/pkg/greet", 0755)
+	err = os.MkdirAll(tempDir+"/src/pkg/greet", 0755)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +36,7 @@ require github.com/tinywasm/fmt v0.8.3
 	}
 
 	// Create greet.go (dependency)
-	greetFile := tempDir + "/pkg/greet/greet.go"
+	greetFile := tempDir + "/src/pkg/greet/greet.go"
 	greetContent := `package greet
 
 import . "github.com/tinywasm/fmt"
@@ -50,7 +50,7 @@ func Greet(target string) string {
 	}
 
 	// Create main.go that imports greet
-	mainGoFile := tempDir + "/cmd/webclient/main.go"
+	mainGoFile := tempDir + "/src/cmd/webclient/main.go"
 	mainGoContent := `package main
 
 import (
